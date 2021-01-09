@@ -4,7 +4,7 @@ import { Icon } from "antd";
 
 import axios from "axios"; //비동기로 전달
 
-const FileUpload = () => {
+const FileUpload = (props) => {
   //axios로 서버에서 받아온 이미지 정보 저장
   const [Images, setImages] = useState([]);
 
@@ -19,9 +19,10 @@ const FileUpload = () => {
     //axios를 통해 요청을 보내면 백앤드에서 파일을 저장하고 .then으로 파일저장정보를 받아온다.
     axios.post("/api/product/image", formData, config).then((response) => {
       if (response.data.success) {
-        // console.log(response.data);
         //기존 이미지를 넣어주고 새로 들어온 이미지를 추가해준다.
         setImages([...Images, response.data.filePath]);
+        //부모 컴포넌트에게도 전달해줌(이미지 올렸을때와 삭제 했을떄 모두 전달해줘야함)
+        props.refreshFunction([...Images, response.data.filePath]);
       } else {
         alert("파일을 저장하는데 실패했습니다!");
       }
@@ -34,6 +35,9 @@ const FileUpload = () => {
     const newImages = [...Images]; //기존이미지들을 복사
     newImages.splice(currentIndex, 1); //클릭한 이미지의 인덱스 부터 1개를 지우겠다.(클릭한 이미지만 삭제)
     setImages(newImages); //업데이트
+
+    //부모 컴포넌트에게 전달
+    props.refreshFunction(newImages);
   };
   return (
     <div style={{ display: "flex", justifyContent: "space-between" }}>

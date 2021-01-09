@@ -15,7 +15,7 @@ function UploadProductPage() {
   const [Description, setDescription] = useState("");
   const [Price, setPrice] = useState(0);
   const [Continent, setContinent] = useState(1);
-  const [Images, setImages] = useState([]);
+  const [Images, setImages] = useState([]); //자식 컴포넌트인 FileUpload에서 이미지 정보를 전달받음
 
   const titleChangeHandeler = (event) => {
     setTitle(event.currentTarget.value);
@@ -31,12 +31,18 @@ function UploadProductPage() {
     setContinent(event.currentTarget.value); //select의 value를 바꿔줌
   };
 
+  //FileUpload.js 에 있는 Image들을 form에서 submit할때
+  //같이 보낼 수 있도록 이미지들을 가져오는 함수
+  const updateImages = (newImages) => {
+    setImages(newImages);
+  };
+
   return (
     <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
         <h2 level={2}>여행 상품 업로드</h2>
       </div>
-      <FileUpload />
+      <FileUpload refreshFunction={updateImages} />
       <Form>
         <label>이름</label>
         <Input onChange={titleChangeHandeler} value={Title} />
