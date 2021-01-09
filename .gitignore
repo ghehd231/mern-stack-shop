@@ -12,3 +12,6 @@ yarn-debug.kog*
 yarn-error.log*
 
 .vscode
+
+# 이미지 안올리기
+/uploads
