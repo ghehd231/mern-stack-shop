@@ -49,4 +49,18 @@ router.post("/", (req, res) => {
     return res.status(200).json({ success: true });
   });
 });
+
+router.post("/products", (req, res) => {
+  //product 콜렉션에 모든 정보 가져오기
+
+  //populate("writer") : writer에 해당하는 모든 정보를 가져올 수 있다.
+  //(mongoDB에는 writer : ObjectId("123nasn") 이런식으로 밖에 안보이는데 해당 유저 정보를 모두 가져오겠다는뜻)
+  //exec 쿼리 돌리고 난 후 정보를 가져옴
+  Product.find()
+    .populate("writer")
+    .exec((err, productInfo) => {
+      if (err) return res.status(400).json({ success: false, err });
+      return res.status(200).json({ success: true, productInfo });
+    });
+});
 module.exports = router;
