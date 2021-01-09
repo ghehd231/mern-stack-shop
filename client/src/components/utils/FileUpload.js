@@ -1,10 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import Dropzone from "react-dropzone";
 import { Icon } from "antd";
 
 import axios from "axios"; //비동기로 전달
 
 const FileUpload = () => {
+  //axios로 서버에서 받아온 이미지 정보 저장
+  const [Images, setImages] = useState([]);
+
   //파일 업로드를 핸들링
   const dropHander = (files) => {
     //axios의 FormData를 통해 보내준다.
@@ -19,6 +22,9 @@ const FileUpload = () => {
     //axios를 통해 요청을 보내면 백앤드에서 파일을 저장하고 .then으로 파일저장정보를 받아온다.
     axios.post("/api/product/image", formData, config).then((response) => {
       if (response.data.success) {
+        console.log(response.data);
+        //기존 이미지를 넣어주고 새로 들어온 이미지를 추가해준다.
+        setImages([...Images, response.data.filePath]);
       } else {
         alert("파일을 저장하는데 실패했습니다!");
       }
@@ -45,6 +51,27 @@ const FileUpload = () => {
           </div>
         )}
       </Dropzone>
+
+      <div
+        style={{
+          width: "350px",
+          height: "240px",
+          display: "flex",
+          //   alignItems: "center",
+          //   justifyContent: "center",
+          overflowX: "scroll",
+          webkitScroll: "none",
+        }}
+      >
+        {Images.map((image, index) => (
+          <div key={index}>
+            <img
+              style={{ minWidth: "300px", width: "300px", height: "240px" }}
+              src={`http://localhost:5000/${image}`}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

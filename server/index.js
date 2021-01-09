@@ -39,9 +39,9 @@ app.use("/api/users", require("./routes/users"));
 
 /*
 파일 업로드 추가한 부분
+"/api/product/" 로 온거는 /routes/product를 불러와서 전달해줌
 */
-// /api/product/ 로 온거는 /routes/product를 불러와서 전달해줌
-app.post("/api/product/", require("./routes/product"));
+app.use("/api/product", require("./routes/product"));
 
 //use this to show the image you have in node js server to client (react js)
 //https://stackoverflow.com/questions/48914987/send-image-path-from-node-js-express-server-to-react-client
