@@ -56,8 +56,13 @@ router.post("/products", (req, res) => {
   //populate("writer") : writer에 해당하는 모든 정보를 가져올 수 있다.
   //(mongoDB에는 writer : ObjectId("123nasn") 이런식으로 밖에 안보이는데 해당 유저 정보를 모두 가져오겠다는뜻)
   //exec 쿼리 돌리고 난 후 정보를 가져옴
+
+  let limit = req.body.limit ? parseInt(req.body.limit) : 20; //정해진 limit 이 있으면 숫자로 변환 하고 없으면 지정
+  let skip = req.body.skip ? parseInt(req.body.skip) : 0; //있으면 숫자변환 없으면 0으로 지정
   Product.find()
     .populate("writer")
+    .skip(skip)
+    .limit(limit)
     .exec((err, productInfo) => {
       if (err) return res.status(400).json({ success: false, err });
       return res.status(200).json({ success: true, productInfo });

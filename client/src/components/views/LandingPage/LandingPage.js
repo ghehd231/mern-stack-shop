@@ -6,8 +6,17 @@ import Meta from "antd/lib/card/Meta";
 import ImageSlider from "../../utils/ImageSlider";
 function LandingPage() {
   const [Products, setProducts] = useState([]);
+
+  const [Skip, setSkip] = useState(0); //어디서 부터 가져오는지 (0부터 limit 까지)
+  const [Limit, setLimit] = useState(8); //제한 갯수
   useEffect(() => {
-    axios.post("/api/product/products").then((response) => {
+    //skip 부터 limit 까지 가져오기 위해서 보냄
+    let body = {
+      skip: Skip,
+      limit: Limit,
+    };
+
+    axios.post("/api/product/products", body).then((response) => {
       if (response.data.success) {
         console.log(response.data.productInfo);
         setProducts([...response.data.productInfo]);
@@ -17,6 +26,7 @@ function LandingPage() {
     });
   }, []);
 
+  const loadMoreHandler = () => {};
   const renderCards = Products.map((product, index) => {
     return (
       <Col lg={6} md={8} xs={24} key={index}>
@@ -45,6 +55,9 @@ function LandingPage() {
         <Row gutter={[16, 16]}>{renderCards}</Row>
 
         <br />
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <button onClick={loadMoreHandler}>더보기</button>
+        </div>
       </div>
     </>
   );
