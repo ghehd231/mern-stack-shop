@@ -7,14 +7,16 @@ import ImageSlider from "../../utils/ImageSlider";
 
 import CheckBox from "./Sections/CheckBox"; //체크 박스
 import RadioBox from "./Sections/RadioBox"; //라디오 박스
+import SearchFeature from "./Sections/SearchFeature"; //검색 박스
 import { continents, price } from "./Sections/Datas";
+import Search from "antd/lib/input/Search";
+
 function LandingPage() {
   const [Products, setProducts] = useState([]);
-
   const [Skip, setSkip] = useState(0); //어디서 부터 가져오는지 (0부터 limit 까지)
   const [Limit, setLimit] = useState(8); //제한 갯수
-
   const [PostSize, setPostSize] = useState(0); // 더보기 버튼 전체 이미지를 모두 불러왔으면 안보이게 하기 위해 선언
+  const [SearchTerm, setSearchTerm] = useState(""); //검색
 
   const [Filters, setFilters] = useState({
     continents: [],
@@ -112,6 +114,12 @@ function LandingPage() {
     showFilteredResult(newFilters);
     setFilters(newFilters);
   };
+
+  //하위 검색 컴포넌트에서 값 가져오는 역활
+  const updateSearchTerm = (newSearchTerm) => {
+    //newSearchTerm : e.currentTarget.value의 값
+    setSearchTerm(newSearchTerm);
+  };
   return (
     <>
       <div style={{ width: "75%", margin: "3rem auto" }}>
@@ -122,7 +130,6 @@ function LandingPage() {
         </div>
 
         {/* Filter */}
-
         <Row gutter={[16, 16]}>
           {/* checkbox */}
           <Col lg={12} xs={24}>
@@ -142,6 +149,15 @@ function LandingPage() {
         </Row>
         {/* Search */}
 
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            margin: "1rem auto",
+          }}
+        >
+          <SearchFeature refreshFunction={updateSearchTerm} />
+        </div>
         {/* Cards */}
         {/* gutter: 여백 */}
         <Row gutter={[16, 16]}>{renderCards}</Row>
