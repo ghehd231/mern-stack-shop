@@ -65,6 +65,8 @@ function LandingPage() {
     );
   });
 
+  //자식 컴포넌트인 Checkbox에서 체크된 값을 가져오는 함수
+  const handelFilters = () => {};
   return (
     <>
       <div style={{ width: "75%", margin: "3rem auto" }}>
@@ -78,7 +80,10 @@ function LandingPage() {
 
         {/* checkbox */}
 
-        <CheckBox list={continents} />
+        <CheckBox
+          list={continents}
+          handelFilters={(filters) => handelFilters(filters, "continents")}
+        />
         {/* Search */}
 
         {/* Cards */}
