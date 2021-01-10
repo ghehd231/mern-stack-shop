@@ -4,6 +4,8 @@ import { Collapse, Checkbox } from "antd";
 const { Panel } = Collapse;
 const CheckBox = (props) => {
   const [Checked, setChecked] = useState([]);
+
+  //체크박스 토글해주는 함수
   const handleToggle = (value) => {
     //누른것의 인덱스를 구하고
     const currentIndex = Checked.indexOf(value);
@@ -18,7 +20,7 @@ const CheckBox = (props) => {
       newChecked.splice(currentIndex, 1);
     }
     setChecked(newChecked);
-    console.log(Checked);
+    props.handleFilters(newChecked);
   };
   //체크박스 리스트들을 만드는 함수
   const renderCheckbokLists = () =>

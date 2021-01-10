@@ -50,16 +50,31 @@ router.post("/", (req, res) => {
   });
 });
 
+//product 콜렉션에 모든 정보 가져오기, 더보기 기능, 필터기능을 수행
 router.post("/products", (req, res) => {
-  //product 콜렉션에 모든 정보 가져오기
-
-  //populate("writer") : writer에 해당하는 모든 정보를 가져올 수 있다.
-  //(mongoDB에는 writer : ObjectId("123nasn") 이런식으로 밖에 안보이는데 해당 유저 정보를 모두 가져오겠다는뜻)
-  //exec 쿼리 돌리고 난 후 정보를 가져옴
-
+  /* 
+     populate("writer") : writer에 해당하는 모든 정보를 가져올 수 있다.
+      ㄴ>(mongoDB에는 writer : ObjectId("123nasn") 이런식으로 밖에 안보이는데 해당 유저 정보를 모두 가져오겠다는뜻)
+     
+     find: 필터 기능 에서 사용하고 [2,3]에 해당하는 값을 가져온다.
+     exec: 쿼리 돌리고 난 후 정보를 가져옴
+     skip: 처음에 어디서 부터 값을 가져올 건지 지정
+     limit: 몇개까지 가져올 건지 지정 
+   */
   let limit = req.body.limit ? parseInt(req.body.limit) : 20; //정해진 limit 이 있으면 숫자로 변환 하고 없으면 지정
   let skip = req.body.skip ? parseInt(req.body.skip) : 0; //있으면 숫자변환 없으면 0으로 지정
-  Product.find()
+
+  //필터 기능을 위한 작업
+  let findArgs = {};
+
+  for (let key in req.body.filters) {
+    if (req.body.filters[key].length > 0) {
+      //filters['continents'].length >0 크면 continents : [2,4,5] 처럼 하나 이상 값이 있다라는뜻
+      findArgs[key] = req.body.filters[key]; // let findArgs = { continents: [2,4,5] }
+    }
+  }
+  console.log(findArgs);
+  Product.find(findArgs)
     .populate("writer")
     .skip(skip)
     .limit(limit)
