@@ -40,6 +40,7 @@ router.post("/image", (req, res) => {
   });
 });
 
+//상품 올리기
 router.post("/", (req, res) => {
   const product = new Product(req.body); //form으로 전달해준 정보들을 req.body 받아와 새로운 객체을 만든다.
 
@@ -113,5 +114,22 @@ router.post("/products", (req, res) => {
           .json({ success: true, productInfo, postSize: productInfo.length });
       });
   }
+
+  //상세 보기 axios.get(`/api/product/products_by_id?id=${productId}&type=single`)
+  router.get("/products_by_id", (req, res) => {
+    //url 파라미터를 가져 올때는 req.body대신 req.query를 써준다.
+    let type = req.query.type;
+    let productId = req.query.id;
+
+    //product_id를 이용 해서 디비에서 정보를 가져온다.
+    Product.find({ _id: productId })
+      .populate("writer")
+      .exec((err, product) => {
+        // if (err) return res.status(400).json({ success: false, err });
+        // return res.status(200).json({ success: true, product });
+        if (err) return res.status(400).send({ success: false, err });
+        return res.status(200).send({ success: true, product });
+      });
+  });
 });
 module.exports = router;

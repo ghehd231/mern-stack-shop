@@ -9,7 +9,6 @@ import CheckBox from "./Sections/CheckBox"; //체크 박스
 import RadioBox from "./Sections/RadioBox"; //라디오 박스
 import SearchFeature from "./Sections/SearchFeature"; //검색 박스
 import { continents, price } from "./Sections/Datas";
-import Search from "antd/lib/input/Search";
 
 function LandingPage() {
   const [Products, setProducts] = useState([]);
@@ -69,9 +68,11 @@ function LandingPage() {
   const renderCards = Products.map((product, index) => {
     return (
       <Col lg={6} md={8} xs={24} key={index}>
-        <Card cover={<ImageSlider images={product.images} />}>
-          <Meta title={product.title} description={`$${product.price}`} />
-        </Card>
+        <a href={`/product/${product._id}`}>
+          <Card cover={<ImageSlider images={product.images} />}>
+            <Meta title={product.title} description={`$${product.price}`} />
+          </Card>
+        </a>
       </Col>
     );
   });

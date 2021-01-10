@@ -8,7 +8,7 @@ import RegisterPage from "./views/RegisterPage/RegisterPage.js";
 import NavBar from "./views/NavBar/NavBar";
 import Footer from "./views/Footer/Footer";
 import UploadProductPage from "./views/UploadPruductPage/UploadProductPage";
-
+import DetailProductPage from "./views/DetailProductPage/DetailProductPage";
 //null   Anyone Can go inside
 //true   only logged in user can go inside
 //false  logged in user can't go inside
@@ -22,10 +22,18 @@ function App() {
           <Route exact path="/" component={Auth(LandingPage, null)} />
           <Route exact path="/login" component={Auth(LoginPage, false)} />
           <Route exact path="/register" component={Auth(RegisterPage, false)} />
+          {/* 상품 올리는 페이지 로그인 된사람만 = true */}
           <Route
             exact
             path="/product/upload"
             component={Auth(UploadProductPage, true)}
+          />
+          {/* 상세 페이지(아무나 들어가도 됌 Auth(component, null)
+           <a href={`/product/${product._id}`}></a>에서 받는다 */}
+          <Route
+            exact
+            path="/product/:productId"
+            component={Auth(DetailProductPage, null)}
           />
         </Switch>
       </div>
