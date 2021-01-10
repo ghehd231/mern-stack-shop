@@ -6,7 +6,8 @@ import Meta from "antd/lib/card/Meta";
 import ImageSlider from "../../utils/ImageSlider";
 
 import CheckBox from "./Sections/CheckBox"; //체크 박스
-import { continents } from "./Sections/Datas";
+import RadioBox from "./Sections/RadioBox"; //라디오 박스
+import { continents, price } from "./Sections/Datas";
 function LandingPage() {
   const [Products, setProducts] = useState([]);
 
@@ -82,18 +83,34 @@ function LandingPage() {
       filters: filters,
     };
 
-    console.log("axios 호출s");
     getProducts(body); //axios로 보낸다.
     setSkip(0); //skip이 0으로 됐기 때문에 바꿔줘야함
   };
 
-  //   자식 컴포넌트인 Checkbox에서 체크된 값을 가져오는 함수
-  const handleFilters = (filters, catagory) => {
-    //props 의 filters는 checked된 id, catagory: 'continents' or 'price'가 들어있다.
-    const newFilters = { ...Filters }; //기존 Filters를 얕은 복사
-    newFilters[catagory] = filters; // 예시 : newFilters['continents'] = [1,2,3]
+  // price array: [0, 199]의 값을 가져온다.
+  const handlePrice = (value) => {
+    const data = price;
+    let array = [];
+    for (let key in data) {
+      if (data[key]._id === parseInt(value, 10)) {
+        array = data[key].array;
+      }
+    }
+    return array;
+  };
 
+  //   자식 컴포넌트인 Checkbox에서 체크된 값을 가져오는 함수
+  const handleFilters = (filters, category) => {
+    //props 의 filters는 checked된 id, category: 'continents' or 'price'가 들어있다.
+    const newFilters = { ...Filters }; //기존 Filters를 얕은 복사
+    newFilters[category] = filters; // 예시 : newFilters['continents'] = [1,2,3]
+
+    if (category === "price") {
+      let priceValue = handlePrice(filters);
+      newFilters[category] = priceValue; // 예시 : newFilters['price'] = [0, 199]
+    }
     showFilteredResult(newFilters);
+    setFilters(newFilters);
   };
   return (
     <>
@@ -106,12 +123,23 @@ function LandingPage() {
 
         {/* Filter */}
 
-        {/* checkbox */}
-
-        <CheckBox
-          list={continents}
-          handleFilters={(filters) => handleFilters(filters, "continents")}
-        />
+        <Row gutter={[16, 16]}>
+          {/* checkbox */}
+          <Col lg={12} xs={24}>
+            <CheckBox
+              list={continents}
+              handleFilters={(filters) => handleFilters(filters, "continents")}
+            />
+          </Col>
+          {/* lg={12},xs={12 + 12} 반응형 해주는거임. 데스크톱에선 한줄에 50%로 -> 작아지면 두줄로 */}
+          <Col lg={12} xs={24}>
+            {/* radio box */}
+            <RadioBox
+              list={price}
+              handleFilters={(filters) => handleFilters(filters, "price")}
+            />
+          </Col>
+        </Row>
         {/* Search */}
 
         {/* Cards */}

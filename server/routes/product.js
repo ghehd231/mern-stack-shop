@@ -68,12 +68,22 @@ router.post("/products", (req, res) => {
   let findArgs = {};
 
   for (let key in req.body.filters) {
+    //filters['continents'].length >0 크면 continents : [2,4,5] 처럼 하나 이상 값이 있다라는뜻
     if (req.body.filters[key].length > 0) {
-      //filters['continents'].length >0 크면 continents : [2,4,5] 처럼 하나 이상 값이 있다라는뜻
-      findArgs[key] = req.body.filters[key]; // let findArgs = { continents: [2,4,5] }
+      if (key === "price") {
+        //gte(greater then equal) : (이것) 보다 크거나 같고
+        //lte(less then equal) : (이것) 보다 작거나 같고
+        findArgs[key] = {
+          $gte: req.body.filters[key][0],
+          $lte: req.body.filters[key][1],
+        };
+      } else {
+        // let findArgs = { continents: [2,4,5] }
+        findArgs[key] = req.body.filters[key];
+      }
     }
   }
-  console.log(findArgs);
+
   Product.find(findArgs)
     .populate("writer")
     .skip(skip)
