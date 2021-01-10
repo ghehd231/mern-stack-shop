@@ -114,7 +114,6 @@ router.post("/products", (req, res) => {
           .json({ success: true, productInfo, postSize: productInfo.length });
       });
   }
-
   //상세 보기 axios.get(`/api/product/products_by_id?id=${productId}&type=single`)
   router.get("/products_by_id", (req, res) => {
     //url 파라미터를 가져 올때는 req.body대신 req.query를 써준다.
