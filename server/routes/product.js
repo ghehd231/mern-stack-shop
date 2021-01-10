@@ -56,13 +56,14 @@ router.post("/products", (req, res) => {
      populate("writer") : writer에 해당하는 모든 정보를 가져올 수 있다.
       ㄴ>(mongoDB에는 writer : ObjectId("123nasn") 이런식으로 밖에 안보이는데 해당 유저 정보를 모두 가져오겠다는뜻)
      
-     find: 필터 기능 에서 사용하고 [2,3]에 해당하는 값을 가져온다.
+     find: 필터 기능 에서 사용하고 [2,3]에 해당하는 값을 가져온다. (검색어 에서는 find를 하나더 추가함)
      exec: 쿼리 돌리고 난 후 정보를 가져옴
      skip: 처음에 어디서 부터 값을 가져올 건지 지정
      limit: 몇개까지 가져올 건지 지정 
    */
   let limit = req.body.limit ? parseInt(req.body.limit) : 20; //정해진 limit 이 있으면 숫자로 변환 하고 없으면 지정
   let skip = req.body.skip ? parseInt(req.body.skip) : 0; //있으면 숫자변환 없으면 0으로 지정
+  let term = req.body.searchTerm; //검색어
 
   //필터 기능을 위한 작업
   let findArgs = {};
@@ -84,15 +85,33 @@ router.post("/products", (req, res) => {
     }
   }
 
-  Product.find(findArgs)
-    .populate("writer")
-    .skip(skip)
-    .limit(limit)
-    .exec((err, productInfo) => {
-      if (err) return res.status(400).json({ success: false, err });
-      return res
-        .status(200)
-        .json({ success: true, productInfo, postSize: productInfo.length });
-    });
+  //검색어
+  if (term) {
+    //검색어 있으면 아래와 동일하지만 find를 하나더 추가
+    Product.find(findArgs)
+      .find({ $text: { $search: term } }) //검색어
+      .populate("writer")
+      .skip(skip)
+      .limit(limit)
+      .exec((err, productInfo) => {
+        if (err) return res.status(400).json({ success: false, err });
+        return res
+          .status(200)
+          .json({ success: true, productInfo, postSize: productInfo.length });
+      });
+  } else {
+    //없으면 상품 관련 검색(더보기, 전체보기, 필터)
+
+    Product.find(findArgs)
+      .populate("writer")
+      .skip(skip)
+      .limit(limit)
+      .exec((err, productInfo) => {
+        if (err) return res.status(400).json({ success: false, err });
+        return res
+          .status(200)
+          .json({ success: true, productInfo, postSize: productInfo.length });
+      });
+  }
 });
 module.exports = router;

@@ -51,10 +51,10 @@ function LandingPage() {
       }
     });
   };
+
   //   더보기 클릭시 트리거 되는 함수
   const loadMoreHandler = () => {
     let skip = Skip + Limit; // 0+8 -> 8+8
-
     //새로 만들어서 보낸다
     let body = {
       skip: skip,
@@ -84,7 +84,6 @@ function LandingPage() {
       limit: Limit,
       filters: filters,
     };
-
     getProducts(body); //axios로 보낸다.
     setSkip(0); //skip이 0으로 됐기 때문에 바꿔줘야함
   };
@@ -118,8 +117,18 @@ function LandingPage() {
   //하위 검색 컴포넌트에서 값 가져오는 역활
   const updateSearchTerm = (newSearchTerm) => {
     //newSearchTerm : e.currentTarget.value의 값
+
+    let body = {
+      skip: 0,
+      limit: Limit,
+      filters: Filters,
+      searchTerm: newSearchTerm,
+    };
+    setSkip(0);
     setSearchTerm(newSearchTerm);
+    getProducts(body);
   };
+
   return (
     <>
       <div style={{ width: "75%", margin: "3rem auto" }}>

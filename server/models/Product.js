@@ -47,14 +47,15 @@ const productSchema = mongoose.Schema(
   { timestamps: true } //자동적으로 등록시간 업데이트
 );
 
+//검색어가 중점적으로 탐색해야 할 필드를 지정
 productSchema.index(
   {
-    title: "text",
-    description: "text",
+    title: "text", //제목과
+    description: "text", //설명을 검색한다
   },
   {
     weights: {
-      title: 5,
+      title: 5, //타이틀을 훨신 중요하게 여겨서 검색
       description: 1,
     },
   }
